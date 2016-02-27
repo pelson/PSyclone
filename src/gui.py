@@ -28,6 +28,15 @@ class ExampleApp(QtGui.QMainWindow, gui_layout.Ui_MainWindow):
             data = f.read()
             self.textBrowser.setText(data) 
 
+        from parse import parse as f_parse
+        alg_ast, invoke_info = f_parse(str(fname), api="dynamo0.3")
+        self.textBrowser_2.setText(str(alg_ast))
+
+        from psyGen import PSyFactory
+        psy = PSyFactory("dynamo0.3").create(invoke_info)
+        from algGen import Alg
+        alg_ast_trans = Alg(alg_ast, psy)
+        self.textBrowser_3.setText(str(alg_ast_trans.gen))
 
 def main():
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
