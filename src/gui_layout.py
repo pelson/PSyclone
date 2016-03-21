@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'gui_layout.ui'
 #
-# Created: Sat Feb 27 00:53:32 2016
+# Created: Mon Mar 21 13:55:42 2016
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -60,9 +60,15 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.addWidget(self.textBrowser_3)
         self.tabWidget.addTab(self.tab_3, _fromUtf8(""))
         self.horizontalLayout.addWidget(self.tabWidget)
+        self.verticalLayout_6 = QtGui.QVBoxLayout()
+        self.verticalLayout_6.setObjectName(_fromUtf8("verticalLayout_6"))
         self.textBrowser_4 = QtGui.QTextBrowser(self.centralwidget)
         self.textBrowser_4.setObjectName(_fromUtf8("textBrowser_4"))
-        self.horizontalLayout.addWidget(self.textBrowser_4)
+        self.verticalLayout_6.addWidget(self.textBrowser_4)
+        self.textBrowser_5 = QtGui.QTextBrowser(self.centralwidget)
+        self.textBrowser_5.setObjectName(_fromUtf8("textBrowser_5"))
+        self.verticalLayout_6.addWidget(self.textBrowser_5)
+        self.horizontalLayout.addLayout(self.verticalLayout_6)
         self.verticalLayout_2.addLayout(self.horizontalLayout)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)

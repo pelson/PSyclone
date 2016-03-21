@@ -55,7 +55,14 @@
        </widget>
       </item>
       <item>
-       <widget class="QTextBrowser" name="textBrowser_4"/>
+       <layout class="QVBoxLayout" name="verticalLayout_6">
+        <item>
+         <widget class="QTextBrowser" name="textBrowser_4"/>
+        </item>
+        <item>
+         <widget class="QTextBrowser" name="textBrowser_5"/>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
