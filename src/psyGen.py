@@ -145,12 +145,27 @@ class PSy(object):
 class Invokes(object):
     ''' Manage the invoke calls '''
     def __init__(self, alg_calls, Invoke):
+        self._invoke_statement_map = {}
         self.invoke_map = {}
         self.invoke_list = []
-        for idx, alg_invocation in enumerate(alg_calls.values()):
+        for idx, statement in enumerate(alg_calls):
+            alg_invocation = alg_calls[statement]
             my_invoke = Invoke(alg_invocation, idx)
             self.invoke_map[my_invoke.name] = my_invoke
             self.invoke_list.append(my_invoke)
+            self._invoke_statement_map[statement] = my_invoke
+
+    @property
+    def statement_map(self):
+        '''returns a map which links algorithm invoke statements in the
+        parsers ast, to the associated psy invoke object '''
+        return self._invoke_statement_map
+
+    @property
+    def statements(self):
+        '''returns all algorithm invoke statements from the
+        parsers ast '''
+        return self._invoke_statement_map.keys()
 
     def __str__(self):
         return "Invokes object containing "+str(self.names)
