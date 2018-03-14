@@ -45,7 +45,8 @@ from psyclone.psyGen import PSyFactory, GenerationError
 from psyclone.dynamo0p3 import DynKernMetadata, DynKern, \
     DynLoop, DynGlobalSum, HaloReadAccess, FunctionSpace, \
     VALID_STENCIL_TYPES, VALID_SCALAR_NAMES, \
-    DISCONTINUOUS_FUNCTION_SPACES
+    DISCONTINUOUS_FUNCTION_SPACES, CONTINUOUS_FUNCTION_SPACES, \
+    VALID_ANY_SPACE_NAMES
 from psyclone.transformations import LoopFuseTrans
 from psyclone.gen_kernel_stub import generate
 import fparser
@@ -4354,6 +4355,39 @@ def test_fs_discontinuous_and_inc_error():
         assert ("It does not make sense for a quantity on a discontinuous "
                 "space (" + fspace + ") to have a 'gh_inc' access"
                 in str(excinfo.value))
+
+
+### IK: Use pytest.fixture for this (to ass gh_readwrite as well)
+def test_fs_continuous_and_write_error():
+    ''' Test that an error is raised if a continuous function space
+    and gh_write or gh_readwrite are provided for the same field in
+    the metadata '''
+    fparser.logging.disable('CRITICAL')
+    for fspace in CONTINUOUS_FUNCTION_SPACES:
+        code = CODE.replace("arg_type(gh_field,gh_read, w2)",
+                            "arg_type(gh_field,gh_write, "
+                            + fspace + ")", 1)
+        ast = fpapi.parse(code, ignore_comments=False)
+        with pytest.raises(ParseError) as excinfo:
+            _ = DynKernMetadata(ast, name="testkern_qr_type")
+        assert ("It does not make sense for a field on a continuous "
+                "space (" + fspace + ") to have 'gh_write' or "
+                "'gh_readwrite' access" in str(excinfo.value))
+
+
+def test_fs_anyspace_and_write_error():
+    ''' Test that an error is raised if any_space and gh_write or
+    gh_readwrite are provided for the same field in the metadata '''
+    fparser.logging.disable('CRITICAL')
+    for fspace in VALID_ANY_SPACE_NAMES:
+        code = CODE.replace("arg_type(gh_field,gh_read, w2)",
+                            "arg_type(gh_field,gh_write, "
+                            + fspace + ")", 1)
+        ast = fpapi.parse(code, ignore_comments=False)
+        with pytest.raises(ParseError) as excinfo:
+            _ = DynKernMetadata(ast, name="testkern_qr_type")
+        assert ("field on any_space cannot have 'gh_write' or "
+                "'gh_readwrite' access" in str(excinfo.value))
 
 
 def test_halo_exchange_view(capsys):

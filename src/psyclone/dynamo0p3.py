@@ -627,6 +627,20 @@ class DynArgDescriptor03(Descriptor):
             if stencil and self._access_descriptor.name.lower() != "gh_read":
                 raise ParseError("a stencil must be read only so its access"
                                  "should be gh_read")
+            # "gh_readwrite" is dealt with in #149
+            if self._function_space1.lower() in CONTINUOUS_FUNCTION_SPACES \
+               and self._access_descriptor.name.lower() in ["gh_write"]:
+                raise ParseError(
+                    "It does not make sense for a field on a continuous "
+                    "space ({0}) to have 'gh_write' or 'gh_readwrite' access".
+                    format(self._function_space1.lower()))
+            # "gh_readwrite" is dealt with in #149
+            if self._function_space1.lower() in VALID_ANY_SPACE_NAMES \
+               and self._access_descriptor.name.lower() in ["gh_write"]:
+                raise ParseError(
+                    "In the dynamo0.3 API a field on any_space cannot "
+                    "have 'gh_write' or 'gh_readwrite' access because it "
+                    "is treated as continuous")
 
         elif self._type in VALID_OPERATOR_NAMES:
             # we expect 4 arguments with the 3rd and 4th each being a
