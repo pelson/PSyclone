@@ -39,11 +39,13 @@ program single_invoke_w2v_wtheta
   ! reading from wtheta (both discontinuous)
   use testkern_w2v_mod, only: testkern_w2v_type
   use inf,              only: field_type
-  implicit none
-  type(field_type) :: f1, f2
 
-  call invoke(                   &
-       testkern_w2v_type(f1, f2) &
+  implicit none
+
+  type(field_type) :: f1, f2, f3
+
+  call invoke(                       &
+       testkern_w2v_type(f1, f2, f3) &
           )
 
 end program single_invoke_w2v_wtheta

@@ -41,11 +41,13 @@ module testkern_w2v_mod
 
   implicit none
 
-  ! Description: discontinuous field readwriter (w2v) and reader (wtheta)
+  ! Description: discontinuous field readwriter (w2v) and two readers
+  ! (wtheta and w2broken)
   type, extends(kernel_type) :: testkern_w2v_type
-     type(arg_type), dimension(2) :: meta_args =      &
-          (/ arg_type(gh_field, gh_readwrite, w2v),   &
-             arg_type(gh_field, gh_read,      wtheta) &
+     type(arg_type), dimension(3) :: meta_args =        &
+          (/ arg_type(gh_field, gh_readwrite, w2v),     &
+             arg_type(gh_field, gh_read,      wtheta),  &
+             arg_type(gh_field, gh_read,      w2broken) &
            /)
      integer :: iterates_over = cells
    contains
@@ -54,24 +56,31 @@ module testkern_w2v_mod
 
 contains
 
-  SUBROUTINE testkern_w2v_code(nlayers,                    &
-                               field1_w2v,                 &
-                               field2_wtheta,              &
-                               ndf_w2v, undf_w2v, map_w2v, &
-                               ndf_wtheta, undf_wtheta, map_wtheta)
+  subroutine testkern_w2v_code(nlayers,                             &
+                               field1_w2v,                          &
+                               field2_wtheta,                       &
+                               field3_w2broken,                     &
+                               ndf_w2v, undf_w2v, map_w2v,          &
+                               ndf_wtheta, undf_wtheta, map_wtheta, &
+                               ndf_w2broken, undf_w2broken, map_w2broken)
 
-    IMPLICIT NONE
+    implicit none
 
-    INTEGER, intent(in) :: nlayers
-    INTEGER, intent(in) :: ndf_w2v
-    INTEGER, intent(in) :: undf_w2v
-    INTEGER, intent(in) :: ndf_wtheta
-    INTEGER, intent(in) :: undf_wtheta
-    REAL(KIND=r_def), intent(inout), dimension(undf_w2v) :: field1_w2v
-    REAL(KIND=r_def), intent(in), dimension(undf_wtheta) :: field2_wtheta
-    INTEGER, intent(in), dimension(ndf_w2v) :: map_w2v
-    INTEGER, intent(in), dimension(ndf_wtheta) :: map_wtheta
+    integer, intent(in) :: nlayers
+    integer, intent(in) :: ndf_w2v
+    integer, intent(in) :: undf_w2v
+    integer, intent(in) :: ndf_wtheta
+    integer, intent(in) :: undf_wtheta
+    integer, intent(in) :: ndf_w2broken
+    integer, intent(in) :: undf_w2broken
+    real(kind=r_def), intent(inout), dimension(undf_w2v)   :: field1_w2v
+    real(kind=r_def), intent(in), dimension(undf_wtheta)   :: field2_wtheta
+    real(kind=r_def), intent(in), dimension(undf_w2broken) :: field3_w2broken
+    integer, intent(in), dimension(ndf_w2v)      :: map_w2v
+    integer, intent(in), dimension(ndf_wtheta)   :: map_wtheta
+    integer, intent(in), dimension(ndf_w2broken) :: map_w2broken
 
-  END SUBROUTINE testkern_w2v_code
+
+  end subroutine testkern_w2v_code
 
 end module testkern_w2v_mod
